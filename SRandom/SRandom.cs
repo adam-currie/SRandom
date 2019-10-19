@@ -80,24 +80,6 @@ namespace SuperRandom {
         });
 
         /// <summary>
-        ///     Returns a random ULong.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")]
-        private ulong _Next() {
-            if(index >= n) {
-                Twist();
-            }
-
-            ulong next = mt[index++];
-            next = next ^ ((next >> u) & d);
-            next = next ^ ((next << s) & b);
-            next = next ^ ((next << t) & c);
-            next = next ^ (next >> l);
-
-            return next;
-        }
-
-        /// <summary>
         ///     Reset index to zero and twist generator variable.
         /// </summary>
         private void Twist() {
@@ -116,6 +98,56 @@ namespace SuperRandom {
         }
 
         /// <summary>
+        ///     Returns a random ULong.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")]
+        private ulong _Next() {
+            if (index >= n) {
+                Twist();
+            }
+
+            ulong next = mt[index++];
+            next = next ^ ((next >> u) & d);
+            next = next ^ ((next << s) & b);
+            next = next ^ ((next << t) & c);
+            next = next ^ (next >> l);
+
+            return next;
+        }
+
+        /// <summary>
+        ///     Returns an unbiased random ULong in the specified range.
+        /// </summary>
+        /// <param name="max"> Exclusive maximum value. </param>
+        /// <param name="min"> Inclusive minimum value. </param>
+        /// <exception cref="ArgumentException">
+        ///     Thrown when min >= max.
+        /// </exception>
+        private ulong Range(ulong max, ulong min) {
+            if (min >= max) throw new ArgumentException("Max is not greater than min.");
+            return Range(max - min) + min;
+        }
+
+        /// <summary>
+        ///     Returns an unbiased random ULongin the specified range.
+        /// </summary>
+        /// <param name="max"> Exclusive maximum value. </param>
+        private ulong Range(ulong max) {
+            if (max == 0) throw new ArgumentException("Max cannot be 0.");
+            ulong raw, rand;
+
+            //if raw comes after N where N is the largest multiple of max that fits in ulong.MaxValue
+            //then we need to try again, this should be rare
+            //checking by comparing raw and rand in order to avoid calculating N with extra division 
+            do {
+                raw = _Next();
+                rand = raw % max;
+            } while (raw - rand > ulong.MaxValue - max);
+
+            return rand;
+        }
+
+        /// <summary>
         ///     Causes early initialization of thread local rng, otherwise initialized when first used.
         /// </summary>
         public static void Init() {
@@ -123,11 +155,27 @@ namespace SuperRandom {
             _ = threadLocalRandom.Value;
         }
 
+
         /// <summary>
         ///     Returns a random ulong.
         /// </summary>
         public static ulong Next() {
             return threadLocalRandom.Value._Next();
+        }
+
+        /// <summary>
+        ///     Returns a random ULong in the specified range.
+        /// </summary>
+        /// <remarks>
+        ///     Range mapped outputs are unbiased.
+        /// </remarks>
+        /// <param name="max"> exclusive maximum value. </param>
+        /// <param name="min"> Inclusive minimum value. </param>
+        /// <exception cref="ArgumentException">
+        ///     Thrown when min >= max.
+        /// </exception>
+        public static ulong Next(ulong max, ulong min = 0) {
+            return threadLocalRandom.Value.Range(max, min);
         }
 
         /// <summary>
