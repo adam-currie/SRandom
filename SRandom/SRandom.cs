@@ -123,7 +123,7 @@ namespace SuperRandom {
         /// <exception cref="ArgumentException">
         ///     Thrown when min >= max.
         /// </exception>
-        private ulong Range(ulong max, ulong min) {
+        private ulong Range(ulong min, ulong max) {
             if (min >= max) throw new ArgumentException("Max is not greater than min.");
             return Range(max - min) + min;
         }
@@ -174,8 +174,19 @@ namespace SuperRandom {
         /// <exception cref="ArgumentException">
         ///     Thrown when min >= max.
         /// </exception>
-        public static ulong Next(ulong max, ulong min = 0) {
-            return threadLocalRandom.Value.Range(max, min);
+        public static ulong Next(ulong min, ulong max) {
+            return threadLocalRandom.Value.Range(min, max);
+        }
+
+        /// <summary>
+        ///     Returns a random ULong in the specified range.
+        /// </summary>
+        /// <remarks>
+        ///     Range mapped outputs are unbiased.
+        /// </remarks>
+        /// <param name="max"> exclusive maximum value. </param>
+        public static ulong Next(ulong max) {
+            return threadLocalRandom.Value.Range(max);
         }
 
         /// <summary>
