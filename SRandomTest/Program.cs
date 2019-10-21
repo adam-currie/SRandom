@@ -14,6 +14,78 @@ namespace SRandomTest
 
             Console.WriteLine("press any key...");
             Console.ReadKey();
+
+            SpeedTestFillArray();
+
+            Console.WriteLine("press any key...");
+            Console.ReadKey();
+        }
+
+        private static void SpeedTestFillArray() {
+            int count = 10000000;
+
+
+            //shorts
+            byte[] bytes = new byte[count];
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            for (int i = 0; i < bytes.Length; i++) {
+                bytes[i] = SRandom.NextByte();
+            }
+            stopwatch.Stop();
+            var nextByteTime = stopwatch.ElapsedMilliseconds;
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            SRandom.FillArray(bytes);
+            stopwatch.Stop();
+            var fillArrayTime = stopwatch.ElapsedMilliseconds;
+
+
+            //ints
+            var intsCount = count / 2;
+            int[] ints = new int[intsCount];
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            for (int i = 0; i < ints.Length; i++) {
+                ints[i] = SRandom.NextInt();
+            }
+            stopwatch.Stop();
+            var nextIntTime = stopwatch.ElapsedMilliseconds;
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            SRandom.FillArray(ints);
+            stopwatch.Stop();
+            var fillArrayIntTime = stopwatch.ElapsedMilliseconds;
+
+
+            //longs
+            var longsCount = count / 4;
+            long[] longs = new long[longsCount];
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            for (long i = 0; i < longs.Length; i++) {
+                longs[i] = SRandom.NextLong();
+            }
+            stopwatch.Stop();
+            var nextLongTime = stopwatch.ElapsedMilliseconds;
+
+            stopwatch.Reset();
+            stopwatch.Start();
+            SRandom.FillArray(longs);
+            stopwatch.Stop();
+            var fillArrayLongTime = stopwatch.ElapsedMilliseconds;
+
+
+            Console.WriteLine(count + " bytes generated on 1 thread with SRandom.NextByte: " + nextByteTime + "ms");
+            Console.WriteLine(count + " bytes generated on 1 thread with SRandom.FillArray: " + fillArrayTime + "ms");
+            Console.WriteLine(intsCount + " ints generated on 1 thread with SRandom.NextInt: " + nextIntTime + "ms");
+            Console.WriteLine(intsCount + " ints generated on 1 thread with SRandom.FillArray: " + fillArrayIntTime + "ms");
+            Console.WriteLine(longsCount + " longs generated on 1 thread with SRandom.Nextlong: " + nextLongTime + "ms");
+            Console.WriteLine(longsCount + " longs generated on 1 thread with SRandom.FillArray: " + fillArrayLongTime + "ms");
         }
 
         private static void SpeedTest() {
