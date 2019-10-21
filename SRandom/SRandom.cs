@@ -30,8 +30,8 @@ namespace SuperRandom {
         private ulong[] mt = new ulong[n];
 
         //RNG shared between threads to create seeds.
-        private static SRandom sharedRandom = new SRandom((ulong)DateTime.Now.Ticks);
-        private static object sharedRandomLock = new object();
+        private static readonly SRandom sharedRandom = new SRandom((ulong)DateTime.Now.Ticks);
+        private static readonly object sharedRandomLock = new object();
 
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace SuperRandom {
                 ulong xA = x >> 1;
 
                 if(x % 2 != 0) {
-                    xA = xA ^ a;
+                    xA ^= a;
                 }
 
                 mt[i] = mt[(i + m) % n] ^ xA;
@@ -107,10 +107,10 @@ namespace SuperRandom {
             }
 
             ulong next = mt[index++];
-            next = next ^ ((next >> u) & d);
-            next = next ^ ((next << s) & b);
-            next = next ^ ((next << t) & c);
-            next = next ^ (next >> l);
+            next ^= ((next >> u) & d);
+            next ^= ((next << s) & b);
+            next ^= ((next << t) & c);
+            next ^= (next >> l);
 
             return next;
         }
