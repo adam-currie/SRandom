@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SuperRandom {
 
@@ -234,8 +235,97 @@ namespace SuperRandom {
         /// <summary>
         ///     Returns a random sbyte.
         /// </summary>
-        public static sbyte NextsByte() {
+        public static sbyte NextSByte() {
             return unchecked((sbyte)threadLocalRandom.Value._Next());
+        }
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually
+        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(byte[] buffer) => FillArray(buffer, sizeof(byte), (ulong n) => unchecked((byte)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually
+        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(sbyte[] buffer) => FillArray(buffer, sizeof(sbyte), (ulong n) => unchecked((sbyte)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually
+        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(ushort[] buffer) => FillArray(buffer, sizeof(ushort), (ulong n) => unchecked((ushort)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually
+        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(short[] buffer) => FillArray(buffer, sizeof(short), (ulong n) => unchecked((short)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually
+        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(uint[] buffer) => FillArray(buffer, sizeof(uint), (ulong n) => unchecked((uint)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually
+        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(int[] buffer) => FillArray(buffer, sizeof(int), (ulong n) => unchecked((int)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(long[] buffer) => FillArray(buffer, sizeof(long), (ulong n) => unchecked((long)n));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
+        /// <remarks>
+        ///     This method bit-shifts the ulong random numbers to get multiple target-type RNGS from a single ulong.
+        /// </remarks>
+        /// <typeparam name="T">Target type.</typeparam>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        /// <param name="typeSize">Size(in bytes) of the target type(must be a factor of ulong size).</param>
+        /// <param name="converter">Method to convert bit-shifted ulong to target type</param>
+        private static void FillArray<T>(T[] buffer, int typeSize, Converter<ulong,T> converter) {
+            Debug.Assert(0 == sizeof(ulong) % typeSize);
+
+            int sizeRatio = sizeof(ulong) / typeSize;
+
+            for (int i = 0; i < buffer.Length;) {
+                ulong n = threadLocalRandom.Value._Next();
+                for (int j = 0; i < buffer.Length && j < sizeRatio; j++) {
+                    buffer[i++] = converter(n << j*typeSize);
+                }
+            }
         }
 
     }
