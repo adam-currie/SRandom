@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRandom", "SRandom\SRandom.csproj", "{4B7C6E9E-0FA0-457C-BCAE-611D11F2FD53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRandomTest", "SRandomTest\SRandomTest.csproj", "{F9EDBD49-AE7C-4748-9EF7-BD23166B4154}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRandomPerformance", "SRandomTest\SRandomPerformance.csproj", "{F9EDBD49-AE7C-4748-9EF7-BD23166B4154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SRandomXUnit", "SRandomXUnit\SRandomXUnit.csproj", "{F7689061-71AC-4516-892C-975AB30F18EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRandomXUnit", "SRandomXUnit\SRandomXUnit.csproj", "{F7689061-71AC-4516-892C-975AB30F18EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
