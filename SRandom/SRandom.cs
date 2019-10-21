@@ -7,7 +7,7 @@ namespace SuperRandom {
 
     /// <summary>
     ///     Static multi-threading optimized random number generator implementing MT19937-64(Mersenne Twister).
-    ///     https://en.wikipedia.org/wiki/Mersenne_Twister#C.23_implementation used for c# implementation reference.
+    ///     https://en.wikipedia.org/wiki/Mersenne_Twister used for reference.
     /// </summary>
     public class SRandom {
         private const int w = 64;
