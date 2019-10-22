@@ -295,11 +295,11 @@ namespace SuperRandom {
         /// </summary>
         /// <remarks>
         ///     This method bit-shifts the ulong random numbers to get multiple target-type RNGS from a single ulong.
+        ///     Need to use other methods as an interface to this to force only allowed types.
         /// </remarks>
         /// <typeparam name="T">Target type.</typeparam>
         /// <param name="buffer">The array to fill with random numbers.</param>
         /// <param name="typeSize">Size(in bytes) of the target type(must be a factor of ulong size).</param>
-        /// <param name="convert">Method to convert bit-shifted ulong to target type</param>
         private static void FillArray<T>(T[] buffer, int typeSize) {
             Debug.Assert(0 == sizeof(ulong) % typeSize);
 
