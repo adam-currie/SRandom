@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SuperRandom {
 
@@ -22,7 +23,7 @@ namespace SuperRandom {
         private const int t = 37;
         private const ulong c = 0xFFF7EEE000000000;
         private const int l = 43;
-        private const ulong f = 6364136223846793005;    
+        private const ulong f = 6364136223846793005;
         public const ulong lower_mask = 0x7FFFFFFF;
         public const ulong upper_mask = ~lower_mask;
 
@@ -33,13 +34,12 @@ namespace SuperRandom {
         private static readonly SRandom sharedRandom = new SRandom((ulong)DateTime.Now.Ticks);
         private static readonly object sharedRandomLock = new object();
 
-
         /// <summary>
         ///     Creates SRandom seeded with the specified seed.
         /// </summary>
         private SRandom(ulong seed) {
             mt[0] = seed;
-            for(ulong i = 1; i < n; ++i) {
+            for (ulong i = 1; i < n; ++i) {
                 mt[i] = (f * (mt[i - 1] ^ (mt[i - 1] >> (w - 2))) + i);
             }
         }
@@ -54,12 +54,12 @@ namespace SuperRandom {
              * use shared seed to create thread local seeds so that if other seeds are created close together,
              * they wont use the same time as their main source of entropy
              */
-            lock(sharedRandomLock) {
+            lock (sharedRandomLock) {
                 entropySources.Add(sharedRandom._Next());
             }
 
             //use process info as a source of entropy
-            using(Process proc = Process.GetCurrentProcess()) {
+            using (Process proc = Process.GetCurrentProcess()) {
                 entropySources.Add((ulong)proc.PrivateMemorySize64);
                 entropySources.Add((ulong)proc.Id);
             }
@@ -69,9 +69,9 @@ namespace SuperRandom {
             entropySources.Add((ulong)stopwatch.ElapsedTicks);
 
             ulong seed = (ulong)DateTime.Now.Ticks;
-            foreach(ulong source in entropySources) {
+            foreach (ulong source in entropySources) {
                 //if source of entropy erroneously evaluating to zero was used, it would negate the usefullness of the others, so just ignore it
-                if(source != 0) {
+                if (source != 0) {
                     seed *= source;
                 }
             }
@@ -83,11 +83,11 @@ namespace SuperRandom {
         ///     Reset index to zero and twist generator variable.
         /// </summary>
         private void Twist() {
-            for(ulong i = 0; i < n; ++i) {
+            for (ulong i = 0; i < n; ++i) {
                 ulong x = (mt[i] & upper_mask) + (mt[(i + 1) % n] & lower_mask);
                 ulong xA = x >> 1;
 
-                if(x % 2 != 0) {
+                if (x % 2 != 0) {
                     xA ^= a;
                 }
 
@@ -192,51 +192,37 @@ namespace SuperRandom {
         /// <summary>
         ///     Returns a random long.
         /// </summary>
-        public static long NextLong() {
-            return unchecked((long)threadLocalRandom.Value._Next());
-        }
+        public static long NextLong() => UncheckedConvert<long>(Next());
 
         /// <summary>
         ///     Returns a random uint.
         /// </summary>
-        public static uint NextUInt(){
-            return unchecked((uint)threadLocalRandom.Value._Next());
-        }
+        public static uint NextUInt() => UncheckedConvert<uint>(Next());
 
         /// <summary>
         ///     Returns a random int.
         /// </summary>
-        public static int NextInt() {
-            return unchecked((int)threadLocalRandom.Value._Next());
-        }
+        public static int NextInt() => UncheckedConvert<int>(Next());
 
         /// <summary>
         ///     Returns a random ushort.
         /// </summary>
-        public static ushort NextUShort() {
-            return unchecked((ushort)threadLocalRandom.Value._Next());
-        }
+        public static ushort NextUShort() => UncheckedConvert<ushort>(Next());
 
         /// <summary>
         ///     Returns a random short.
         /// </summary>
-        public static short NextShort() {
-            return unchecked((short)threadLocalRandom.Value._Next());
-        }
+        public static short NextShort() => UncheckedConvert<short>(Next());
 
         /// <summary>
         ///     Returns a random byte.
         /// </summary>
-        public static byte NextByte() {
-            return unchecked((byte)threadLocalRandom.Value._Next());
-        }
+        public static byte NextByte() => UncheckedConvert<byte>(Next());
 
         /// <summary>
         ///     Returns a random sbyte.
         /// </summary>
-        public static sbyte NextSByte() {
-            return unchecked((sbyte)threadLocalRandom.Value._Next());
-        }
+        public static sbyte NextSByte() => UncheckedConvert<sbyte>(Next());
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -246,7 +232,7 @@ namespace SuperRandom {
         ///     because it pulls multiple random values from one ulong via bit-shifting.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(byte[] buffer) => FillArray(buffer, sizeof(byte), (ulong n) => unchecked((byte)n));
+        public static void FillArray(byte[] buffer) => FillArray(buffer, sizeof(byte));
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -256,7 +242,7 @@ namespace SuperRandom {
         ///     because it pulls multiple random values from one ulong via bit-shifting.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(sbyte[] buffer) => FillArray(buffer, sizeof(sbyte), (ulong n) => unchecked((sbyte)n));
+        public static void FillArray(sbyte[] buffer) => FillArray(buffer, sizeof(sbyte));
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -266,7 +252,7 @@ namespace SuperRandom {
         ///     because it pulls multiple random values from one ulong via bit-shifting.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(ushort[] buffer) => FillArray(buffer, sizeof(ushort), (ulong n) => unchecked((ushort)n));
+        public static void FillArray(ushort[] buffer) => FillArray(buffer, sizeof(ushort));
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -276,7 +262,7 @@ namespace SuperRandom {
         ///     because it pulls multiple random values from one ulong via bit-shifting.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(short[] buffer) => FillArray(buffer, sizeof(short), (ulong n) => unchecked((short)n));
+        public static void FillArray(short[] buffer) => FillArray(buffer, sizeof(short));
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -286,7 +272,7 @@ namespace SuperRandom {
         ///     because it pulls multiple random values from one ulong via bit-shifting.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(uint[] buffer) => FillArray(buffer, sizeof(uint), (ulong n) => unchecked((uint)n));
+        public static void FillArray(uint[] buffer) => FillArray(buffer, sizeof(uint));
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -296,13 +282,13 @@ namespace SuperRandom {
         ///     because it pulls multiple random values from one ulong via bit-shifting.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(int[] buffer) => FillArray(buffer, sizeof(int), (ulong n) => unchecked((int)n));
+        public static void FillArray(int[] buffer) => FillArray(buffer, sizeof(int));
 
         /// <summary>
         ///     Fills the specified array with random values.
         /// </summary>
         /// <param name="buffer">The array to fill with random numbers.</param>
-        public static void FillArray(long[] buffer) => FillArray(buffer, sizeof(long), (ulong n) => unchecked((long)n));
+        public static void FillArray(long[] buffer) => FillArray(buffer, sizeof(long));
 
         /// <summary>
         ///     Fills the specified array with random values.
@@ -313,8 +299,8 @@ namespace SuperRandom {
         /// <typeparam name="T">Target type.</typeparam>
         /// <param name="buffer">The array to fill with random numbers.</param>
         /// <param name="typeSize">Size(in bytes) of the target type(must be a factor of ulong size).</param>
-        /// <param name="converter">Method to convert bit-shifted ulong to target type</param>
-        private static void FillArray<T>(T[] buffer, int typeSize, Converter<ulong,T> converter) {
+        /// <param name="convert">Method to convert bit-shifted ulong to target type</param>
+        private static void FillArray<T>(T[] buffer, int typeSize) {
             Debug.Assert(0 == sizeof(ulong) % typeSize);
 
             int sizeRatio = sizeof(ulong) / typeSize;
@@ -322,10 +308,27 @@ namespace SuperRandom {
             for (int i = 0; i < buffer.Length;) {
                 ulong n = threadLocalRandom.Value._Next();
                 for (int j = 0; i < buffer.Length && j < sizeRatio; j++) {
-                    buffer[i++] = converter(n << j*typeSize);
+                    buffer[i++] = UncheckedConvert<T>(n << j * typeSize);
                 }
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static T UncheckedConvert<T>(ulong n) {
+            unchecked {
+                if (typeof(T) == typeof(byte)) return (T)(object)(byte)(ulong)(object)n;
+                if (typeof(T) == typeof(sbyte)) return (T)(object)(sbyte)(ulong)(object)n;
+                if (typeof(T) == typeof(ushort)) return (T)(object)(ushort)(ulong)(object)n;
+                if (typeof(T) == typeof(short)) return (T)(object)(short)(ulong)(object)n;
+                if (typeof(T) == typeof(uint)) return (T)(object)(uint)(ulong)(object)n;
+                if (typeof(T) == typeof(int)) return (T)(object)(int)(ulong)(object)n;
+                if (typeof(T) == typeof(long)) return (T)(object)(long)(ulong)(object)n;
+                if (typeof(T) == typeof(ulong)) return (T)(object)n;
+
+                //THIS WILL ALWAYS THROW A CAST EXCEPTION 
+                //throwing one manually would be pointless and when tested prevented some compiler/jit optimization
+                return (T)(object)n;
+            }
+        }
     }
 }
