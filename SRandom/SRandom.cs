@@ -303,12 +303,10 @@ namespace SuperRandom {
         private static void FillArray<T>(T[] buffer, int typeSize) {
             Debug.Assert(0 == sizeof(ulong) % typeSize);
 
-            int sizeRatio = sizeof(ulong) / typeSize;
-
             for (int i = 0; i < buffer.Length;) {
                 ulong n = threadLocalRandom.Value._Next();
-                for (int j = 0; i < buffer.Length && j < sizeRatio; j++) {
-                    buffer[i++] = UncheckedConvert<T>(n << j * typeSize);
+                for (int shiftAmount = 0; i < buffer.Length && shiftAmount < sizeof(ulong); shiftAmount += typeSize) {
+                    buffer[i++] = UncheckedConvert<T>(n << shiftAmount);
                 }
             }
         }
