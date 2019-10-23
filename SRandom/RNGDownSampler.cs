@@ -29,7 +29,7 @@ namespace SuperRandom {
 
             shiftAmount -= targetSize;
 
-            return convert(sample << shiftAmount);
+            return convert(sample >> shiftAmount*8);
         }
 
     }

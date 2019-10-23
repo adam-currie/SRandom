@@ -264,7 +264,7 @@ namespace SuperRandom {
             for (int i = 0; i < buffer.Length;) {
                 ulong n = rng.Next();
                 for (int shiftAmount = 0; i < buffer.Length && shiftAmount < sizeof(ulong); shiftAmount += typeSize) {
-                    buffer[i++] = UncheckedConvert<T>(n << shiftAmount);
+                    buffer[i++] = UncheckedConvert<T>(n >> shiftAmount*8);
                 }
             }
         }
