@@ -16,15 +16,13 @@ namespace SuperRandom {
         private static readonly object sharedRandomLock = new object();
 
         //create thread local rngs using shared rng.
-        private static ThreadLocal<RNGSource> threadLocalRNG = new ThreadLocal<RNGSource>(() => {
+        private static readonly ThreadLocal<RNGSource> threadLocalRNG = new ThreadLocal<RNGSource>(() => {
             List<ulong> entropySources = new List<ulong>();
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            /*
-             * use shared seed to create thread local seeds so that if other seeds are created close together,
-             * they wont use the same time as their main source of entropy
-             */
+            //use shared seed to create thread local seeds so that if other seeds are created close together,
+            //so they wont use the same time as their main source of entropy
             lock (sharedRandomLock) {
                 entropySources.Add(sharedRandom.Next());
             }
@@ -50,33 +48,33 @@ namespace SuperRandom {
             return new RNGSource(seed);
         });
 
-        private static ThreadLocal<RNG<byte>> byteRNG = new ThreadLocal<RNG<byte>>(() => 
+        private static readonly ThreadLocal<RNG<byte>> byteRNG = new ThreadLocal<RNG<byte>>(() => 
             new RNGDownSampler<byte>(((ulong n) => (byte)n), sizeof(byte), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<sbyte>> sbyteRNG = new ThreadLocal<RNG<sbyte>>(() =>
+        private static readonly ThreadLocal<RNG<sbyte>> sbyteRNG = new ThreadLocal<RNG<sbyte>>(() =>
             new RNGDownSampler<sbyte>(((ulong n) => (sbyte)n), sizeof(sbyte), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<uint>> uintRNG = new ThreadLocal<RNG<uint>>(() =>
+        private static readonly ThreadLocal<RNG<uint>> uintRNG = new ThreadLocal<RNG<uint>>(() =>
             new RNGDownSampler<uint>(((ulong n) => (uint)n), sizeof(uint), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<int>> intRNG = new ThreadLocal<RNG<int>>(() => 
+        private static readonly ThreadLocal<RNG<int>> intRNG = new ThreadLocal<RNG<int>>(() => 
             new RNGDownSampler<int>(((ulong n) => (int)n), sizeof(int), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<ushort>> ushortRNG = new ThreadLocal<RNG<ushort>>(() =>
+        private static readonly ThreadLocal<RNG<ushort>> ushortRNG = new ThreadLocal<RNG<ushort>>(() =>
             new RNGDownSampler<ushort>(((ulong n) => (ushort)n), sizeof(ushort), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<short>> shortRNG = new ThreadLocal<RNG<short>>(() =>
+        private static readonly ThreadLocal<RNG<short>> shortRNG = new ThreadLocal<RNG<short>>(() =>
             new RNGDownSampler<short>(((ulong n) => (short)n), sizeof(short), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<float>> floatRNG = new ThreadLocal<RNG<float>>(() =>
+        private static readonly ThreadLocal<RNG<float>> floatRNG = new ThreadLocal<RNG<float>>(() =>
             new RNGDownSampler<float>(((ulong n) => UncheckedConvert<float>(n)), sizeof(float), threadLocalRNG.Value));
 
-        private static ThreadLocal<RNG<bool>> boolRNG = new ThreadLocal<RNG<bool>>(() =>
+        private static readonly ThreadLocal<RNG<bool>> boolRNG = new ThreadLocal<RNG<bool>>(() =>
             new RNGDownSampler<bool>(((ulong n) => UncheckedConvert<bool>(n)), sizeof(bool), threadLocalRNG.Value));
 
 
         /// <summary>
-        ///     Causes early initialization of thread local rng, otherwise initialized when first used.
+        ///     Causes early initialization of thread-local rng, otherwise initialized when first used.
         /// </summary>
         public static void Init() {
             //access the field to force initialization
@@ -87,9 +85,7 @@ namespace SuperRandom {
         /// <summary>
         ///     Returns a random ulong.
         /// </summary>
-        public static ulong Next() {
-            return threadLocalRNG.Value.Next();
-        }
+        public static ulong Next() => threadLocalRNG.Value.Next();
 
         /// <summary>
         ///     Returns a random ULong in the specified range.
@@ -102,9 +98,7 @@ namespace SuperRandom {
         /// <exception cref="ArgumentException">
         ///     Thrown when min >= max.
         /// </exception>
-        public static ulong Next(ulong min, ulong max) {
-            return threadLocalRNG.Value.Range(min, max);
-        }
+        public static ulong Next(ulong min, ulong max) => threadLocalRNG.Value.Range(min, max);
 
         /// <summary>
         ///     Returns a random ULong in the specified range.
@@ -113,9 +107,7 @@ namespace SuperRandom {
         ///     Range mapped outputs are unbiased.
         /// </remarks>
         /// <param name="max"> exclusive maximum value. </param>
-        public static ulong Next(ulong max) {
-            return threadLocalRNG.Value.Range(max);
-        }
+        public static ulong Next(ulong max) => threadLocalRNG.Value.Range(max);
 
         /// <summary>
         ///     Returns a random long.

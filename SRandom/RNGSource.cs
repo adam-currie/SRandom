@@ -7,7 +7,6 @@ namespace SuperRandom {
         private const int w = 64;
         private const ulong n = 312;
         private const ulong m = 156;
-        private const ulong r = 31;
         private const ulong a = 0xB5026F5AA96619E9;
         private const int u = 29;
         private const ulong d = 0x5555555555555555;
@@ -21,7 +20,7 @@ namespace SuperRandom {
         private const ulong upper_mask = ~lower_mask;
 
         private ulong index = n;
-        private ulong[] mt = new ulong[n];
+        private readonly ulong[] mt = new ulong[n];
 
         /// <summary>
         ///     Creates SRandom seeded with the specified seed.

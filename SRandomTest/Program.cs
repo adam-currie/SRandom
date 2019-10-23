@@ -6,7 +6,7 @@ using SuperRandom;
 namespace SRandomTest
 {
     class Program {
-        static void Main(string[] args) {
+        static void Main() {
             Console.WriteLine("press any key...");
             Console.ReadKey();
 
