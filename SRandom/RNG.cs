@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SuperRandom {
+﻿namespace SuperRandom {
     internal interface RNG<T> {
 
         /// <summary>

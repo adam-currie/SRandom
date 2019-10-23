@@ -7,9 +7,11 @@ using System.Runtime.CompilerServices;
 namespace SuperRandom {
 
     /// <summary>
-    ///     Static multi-threading optimized random number generator implementing MT19937-64(Mersenne Twister).
-    ///     https://en.wikipedia.org/wiki/Mersenne_Twister used for reference.
+    ///     Static multi-threading optimized random number generation.
     /// </summary>
+    /// <remarks>
+    ///     Implements MT19937-64(Mersenne Twister).
+    /// </remarks>
     public class SRandom {
         //RNG shared between threads to create seeds.
         private static readonly RNGSource sharedRandom = new RNGSource((ulong)DateTime.Now.Ticks);

@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SuperRandom {
+
+    /// <summary>
+    ///     Random number generator implementing MT19937-64(Mersenne Twister).
+    ///     https://en.wikipedia.org/wiki/Mersenne_Twister used for reference.
+    /// </summary>
     internal class RNGSource : RNG<ulong> {
         private const int w = 64;
         private const ulong n = 312;
