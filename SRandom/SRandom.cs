@@ -71,6 +71,10 @@ namespace SuperRandom {
         private static ThreadLocal<RNG<float>> floatRNG = new ThreadLocal<RNG<float>>(() =>
             new RNGDownSampler<float>(((ulong n) => UncheckedConvert<float>(n)), sizeof(float), threadLocalRNG.Value));
 
+        private static ThreadLocal<RNG<bool>> boolRNG = new ThreadLocal<RNG<bool>>(() =>
+            new RNGDownSampler<bool>(((ulong n) => UncheckedConvert<bool>(n)), sizeof(bool), threadLocalRNG.Value));
+
+
         /// <summary>
         ///     Causes early initialization of thread local rng, otherwise initialized when first used.
         /// </summary>
@@ -159,6 +163,11 @@ namespace SuperRandom {
         public static sbyte NextSByte() => sbyteRNG.Value.Next();
 
         /// <summary>
+        ///     Returns a random bool.
+        /// </summary>
+        public static bool Nextbool() => boolRNG.Value.Next();
+
+        /// <summary>
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
@@ -233,6 +242,15 @@ namespace SuperRandom {
         /// <summary>
         ///     Fills the specified array with random values.
         /// </summary>
+        /// <remarks>
+        ///     This method provides better performance than generating values individually.
+        /// </remarks>
+        /// <param name="buffer">The array to fill with random numbers.</param>
+        public static void FillArray(bool[] buffer) => FillArray(buffer, sizeof(bool));
+
+        /// <summary>
+        ///     Fills the specified array with random values.
+        /// </summary>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(long[] buffer) => FillArray(buffer, sizeof(long));
 
@@ -274,7 +292,7 @@ namespace SuperRandom {
                 if (typeof(T) == typeof(long)) return (T)(object)(long)(ulong)(object)n;
                 if (typeof(T) == typeof(float)) return (T)(object)*((float*)&n);
                 if (typeof(T) == typeof(double)) return (T)(object)*((double*)&n);
-                if (typeof(T) == typeof(ulong)) return (T)(object)n;
+                if (typeof(T) == typeof(bool)) return (T)(object)*((bool*)&n);
 
                 //THIS WILL ALWAYS THROW A CAST EXCEPTION 
                 //throwing one manually would be pointless and when tested prevented some compiler/jit optimization
