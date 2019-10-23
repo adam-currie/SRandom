@@ -162,8 +162,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(byte[] buffer) => FillArray(buffer, sizeof(byte));
@@ -172,8 +171,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(sbyte[] buffer) => FillArray(buffer, sizeof(sbyte));
@@ -182,8 +180,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(ushort[] buffer) => FillArray(buffer, sizeof(ushort));
@@ -192,8 +189,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(short[] buffer) => FillArray(buffer, sizeof(short));
@@ -202,8 +198,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(uint[] buffer) => FillArray(buffer, sizeof(uint));
@@ -212,8 +207,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(int[] buffer) => FillArray(buffer, sizeof(int));
@@ -222,8 +216,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(float[] buffer) => FillArray(buffer, sizeof(float));
@@ -232,8 +225,7 @@ namespace SuperRandom {
         ///     Fills the specified array with random values.
         /// </summary>
         /// <remarks>
-        ///     This method provides better performance than generating values individually
-        ///     because it pulls multiple random values from one ulong via bit-shifting.
+        ///     This method provides better performance than generating values individually.
         /// </remarks>
         /// <param name="buffer">The array to fill with random numbers.</param>
         public static void FillArray(double[] buffer) => FillArray(buffer, sizeof(double));
