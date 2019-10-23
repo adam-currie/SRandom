@@ -19,13 +19,33 @@ namespace SRandomTest
 
             Console.WriteLine("press any key...");
             Console.ReadKey();
+
+            SpeedTestRange();
+
+            Console.WriteLine("press any key...");
+            Console.ReadKey();
+        }
+
+        private static void SpeedTestRange() {
+            int count = 50000000;
+
+            ulong[] arr = new ulong[count];
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            for (int i = 0; i < arr.Length; i++) {
+                arr[i] = SRandom.Next(10000, 100000);
+            }
+            stopwatch.Stop();
+            var time = stopwatch.ElapsedMilliseconds;
+
+            Console.WriteLine(count + " ulongs generated on 1 thread with range method: " + time + "ms");
         }
 
         private static void SpeedTestFillArray() {
             int count = 10000000;
 
 
-            //shorts
+            //bytes
             byte[] bytes = new byte[count];
 
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -41,6 +61,14 @@ namespace SRandomTest
             stopwatch.Stop();
             var fillArrayTime = stopwatch.ElapsedMilliseconds;
 
+            stopwatch.Reset();
+            stopwatch.Start();
+            byte[] b = new byte[8];
+            for (int i = 0; i < bytes.Length/8; i++) {
+                SRandom.FillArray(b);
+            }
+            stopwatch.Stop();
+            var fillArraySplitTime = stopwatch.ElapsedMilliseconds;
 
             //ints
             var intsCount = count / 2;
@@ -82,6 +110,7 @@ namespace SRandomTest
 
             Console.WriteLine(count + " bytes generated on 1 thread with SRandom.NextByte: " + nextByteTime + "ms");
             Console.WriteLine(count + " bytes generated on 1 thread with SRandom.FillArray: " + fillArrayTime + "ms");
+            Console.WriteLine(count + " bytes generated on 1 thread with SRandom.FillSplitArray: " + fillArraySplitTime + "ms");
             Console.WriteLine(intsCount + " ints generated on 1 thread with SRandom.NextInt: " + nextIntTime + "ms");
             Console.WriteLine(intsCount + " ints generated on 1 thread with SRandom.FillArray: " + fillArrayIntTime + "ms");
             Console.WriteLine(longsCount + " longs generated on 1 thread with SRandom.Nextlong: " + nextLongTime + "ms");
