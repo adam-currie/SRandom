@@ -3,8 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using SuperRandom;
 
-namespace SRandomTest
-{
+namespace SRandomTest {
     class Program {
         static void Main() {
             Console.WriteLine("press any key...");

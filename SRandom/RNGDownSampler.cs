@@ -10,7 +10,7 @@ namespace SuperRandom {
 
         private readonly Converter<ulong, T> convert;
         private readonly int targetSize;
-        private readonly RNGSource source;
+        private readonly RNG<ulong> source;
 
         private ulong sample;
         private int shiftAmount = 0;
@@ -21,7 +21,7 @@ namespace SuperRandom {
         /// <param name="convert"> Converter to change from source to target type. </param>
         /// <param name="typeSize"> Size in bytes of target type. </param>
         /// <param name="source"> Underlying rng to pull from. </param>
-        public RNGDownSampler(Converter<ulong, T> convert, int typeSize, RNGSource source) {
+        public RNGDownSampler(Converter<ulong, T> convert, int typeSize, RNG<ulong> source) {
             if (0 != sourceSize % typeSize) {
                 throw new ArgumentOutOfRangeException("target size must be a factor of source size");
             }
